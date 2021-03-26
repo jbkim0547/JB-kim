@@ -1,0 +1,64 @@
+import React, { Component, Fragment } from 'react';
+import { Button } from '@material-ui/core';
+import * as ratingService from "../../services/ratingService";
+import logger from 'sabio-debug'
+import CustomizedRatings from '../ratings/CustomizedRating'
+import PropTypes from 'prop-types';
+
+const _logger = logger.extend("Rating");
+
+ class Ratings extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			id:0,
+			commentId:0,
+			entityTypeId:4,
+			entityId:4,
+			createdBy:15,
+			rating:0
+		}
+	}
+
+	onRatingChange = (event, newValue) => {
+		this.setState(prevState => {
+			return {
+				...prevState,
+				rating: newValue
+			}
+		})
+	}
+
+	onRatingSubmit = () => {
+		ratingService.postRating(this.state) 
+			.then(this.postRatingSuccess)
+			.then(this.postRatingError)
+	}
+
+	postRatingSuccess = (response) => {
+		 //this.props.history.push('/comments/')
+	}
+
+	postRatingError = (err) => {
+		_logger("Post rating err", err);
+	}
+
+	render() {
+		return (
+			<Fragment>
+				<CustomizedRatings value={this.state.rating} onChange={this.onRatingChange} />
+				
+			</Fragment>
+		)
+		
+	}
+}
+
+Ratings.propTypes = {
+	history: PropTypes.shape({
+	  push: PropTypes.func,
+	}).isRequired,
+  };
+
+
+  export default Ratings;

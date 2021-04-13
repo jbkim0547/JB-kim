@@ -1,0 +1,180 @@
+using Sabio.Data.Providers;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+
+namespace Nextech.Services
+{
+    public class NextechService
+    {
+        IDataProvider _data = null;
+        public NextechService(IDataProvider data) // constructor for a class of NextechService (create instance of class of NextechService)
+                                                  // primary reason for the DataProvider is because the concern of database should not be the concern of the particular service.
+        {
+            _data = data; // us keeping track and assigning a pointer. We wanna keep a reference to it so that we can use it later on.
+        }
+
+
+        public void Delete(int Id)
+        {
+            string procName = "[dbo].[nextech_Delete]";
+
+            _data.ExecuteNonQuery(procName,
+             inputParamMapper: delegate (SqlParameterCollection collection)
+             {
+                 collection.AddWithValue("@id", Id);
+             },
+            returnParameters: null);
+        }
+
+        public void Update(NextechUpdateRequest model)
+        {
+            string procName = "[dbo].[nextech_Update]";
+            _data.ExecuteNonQuery(procName,
+             inputParamMapper: delegate (SqlParameterCollection col)
+             {
+                 col.AddWithValue("@Id", model.Id);
+                 col.AddWithValue("@Title", model.Title);
+                 col.AddWithValue("@Link", model.Link);
+             },
+             returnParameters: null);
+        }
+
+        public int Add(NextechAddRequest model, int userId)
+        {
+
+            int id = 0;
+
+            string procName = "[dbo].[nextech_Insert]";
+            _data.ExecuteNonQuery(procName,
+             inputParamMapper: delegate (SqlParameterCollection col)
+             {
+                 AddCommonParams(model, col);
+
+                 SqlParameter idOut = new SqlParameter("@Id", SqlDbType.Int);
+                 idOut.Direction = ParameterDirection.Output;
+
+                 col.Add(idOut);
+
+             },
+             returnParameters: delegate (SqlParameterCollection returncollection)
+             {
+                 object oId = returncollection["@Id"].Value;
+
+                 int.TryParse(oId.ToString(), out id);
+
+                 Console.WriteLine("");
+             }
+            );
+            return id;
+        }
+
+        public Nextech Get(int id) //Method signature 
+        {
+
+            Nextech nextech = null; // return value called nextech
+
+            string procName = "[dbo].[nextech_SelectById]";
+
+            _data.ExecuteCmd(procName, delegate (SqlParameterCollection paramCollection)
+            {
+
+                paramCollection.AddWithValue("@Id", id);
+
+            }, delegate (IDataReader reader, short set) //Single Record Mapper
+            {
+
+                nextech = MapNextech(reader);
+
+            }
+
+            );
+
+
+            return nextech;
+        }
+
+        public List<Nextech> GetTop() //List of Nextech is return type
+        {
+
+            string procName = "[dbo].[nextech_SelectRanTen]";
+            List<Nextech> list = null;
+
+            _data.ExecuteCmd(procName, inputParamMapper: null,
+                singleRecordMapper: delegate (IDataReader reader, short set) //Single Record Mapper
+                {
+
+                    Nextech aNextech = MapNextech(reader);
+
+                    if (list == null)
+                    {
+                        list = new List<Nextech>();
+                    }
+
+                    list.Add(aNextech);
+                }
+
+            );
+            return list;
+        }
+
+        public Paged<Nextech> Pagination(int pageIndex, int pageSize)
+        {
+            Paged<Nextech> pagedList = null;
+            List<Nextech> list = null;
+            int totalCount = 0;
+
+            string procName = "[dbo].[nextech_SelectPaginated]";
+
+            _data.ExecuteCmd(procName, (param) =>
+            {
+                param.AddWithValue("@PageIndex", pageIndex);
+                param.AddWithValue("@PageSize", pageSize);
+            },
+            (reader, recordSetIndex) =>
+            {
+
+                int startingIndex = 0;
+                Nextech nextech = MapNextech(reader);
+                totalCount = reader.GetSafeInt32(startingIndex++);
+
+                if (list == null)
+                {
+                    list = new List<Nextech>();
+                }
+
+                list.Add(nextech);
+            }
+            );
+            if (list != null)
+            {
+                pagedList = new Paged<Nextech>(list, pageIndex, pageSize, totalCount);
+            }
+            return pagedList;
+        }
+
+        private static Nextech MapNextech(IDataReader reader)
+        {
+            Nextech aNextech = new Nextech(); //this line of code will execute one time for every record that return for the database
+
+            int startingIndex = 0;
+
+
+            aNextech.Id = reader.GetSafeInt32(startingIndex++);
+            aNextech.Title = reader.GetSafeString(startingIndex++);
+            aNextech.Link = reader.GetSafeString(startingIndex++);
+
+
+            return aNextech;
+        }
+
+        private static void AddCommonParams(NextTechAddRequest model, SqlParameterCollection col)
+        {
+            col.AddWithValue("@Title", model.Title);
+            col.AddWithValue("@Link", model.Link);
+
+
+        }
+    }
+}

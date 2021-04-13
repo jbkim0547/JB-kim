@@ -1,0 +1,32 @@
+import React from "react";
+
+class FriendsList extends React.Component {
+  state = [
+    {
+      title: "covid",
+      link: "www.covid.com",
+    },
+
+    {
+      title: "Nextech",
+      link: "www.Nextech.com",
+    },
+    {
+      title: "Jbkim",
+      link: "www.Jbkim.com",
+    },
+  ];
+  render() {
+    return (
+      <React.Fragment>
+        <div>
+          <h5 className="card-summary">{this.state.title}</h5>
+        </div>
+        <div>
+          <h5 className="card-summary">{this.state.link}</h5>
+        </div>
+      </React.Fragment>
+    );
+  }
+}
+export default FriendsList;

@@ -1,0 +1,212 @@
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+
+
+namespace Nextech.Web.Api.Controllers
+{
+    [Route("api/nextech")]
+    [ApiController]
+    public class NextechApiController
+    {
+
+        private INextechService _service = null;
+        private IAuthenticationService<int> _authService = null;
+        public NextechApiController(INextechService service
+            , ILogger<NextechApiController> logger
+            , IAuthenticationService<int> authService) : base(logger)
+        {
+
+            _service = service;
+            _authService = authService;
+
+        }
+
+        // api/nextech
+        [HttpGet] //route pattern
+        public ActionResult<ItemsResponse<Nextech>> GetAll()
+        {
+            int code = 200;
+            BaseResponse response = null;
+
+            try
+            {
+                List<Nextech> list = _service.GetTop();
+
+                if (list == null)
+                {
+                    code = 404;
+                    response = new ErrorResponse("App Resource not found");
+                }
+                else
+                {
+                    response = new ItemsResponse<Nextech> { Items = list };
+                }
+            }
+            catch (Exception ex)
+            {
+                code = 500;
+                response = new ErrorResponse(ex.Message);
+            }
+
+            return StatusCode(code, response);
+
+        }
+
+        // api/nextech/{id:int}
+        [HttpGet("{id:int}")] 
+        public ActionResult<ItemResponse<Nextech>> Get(int id)
+        {
+
+            int iCode = 200;
+            BaseResponse response = null;
+            try
+            {
+                Nextech nextech = _service.Get(id);
+                if (nextech == null)
+                {
+                    iCode = 404;
+                    response = new ErrorResponse("Application Resource Friend not found.");
+                }
+                else
+                {
+                    response = new ItemResponse<Nextech> { Item = nextech };
+                }
+            }
+            catch (SqlException sqlEx)
+            {
+                iCode = 500;
+                response = new ErrorResponse($"SqlException Error: {sqlEx.Message}");
+                base.Logger.LogError(sqlEx.ToString());
+            }
+
+            catch (ArgumentException argEx)
+            {
+                iCode = 500;
+
+                response = new ErrorResponse($"ArgumentException Error: {argEx.Message}");
+            }
+
+            catch (Exception ex)
+            {
+                iCode = 500;
+                base.Logger.LogError(ex.ToString());
+                response = new ErrorResponse($"Generic Error: {ex.Message}");
+            }
+
+            return StatusCode(iCode, response);
+
+        }
+
+
+        [HttpDelete("{id:int}")]
+        public ActionResult<SuccessResponse> Delete(int id)
+        {
+            int code = 200;
+            BaseResponse response = null;
+            try
+            {
+
+                _service.Delete(id);
+
+                response = new SuccessResponse();
+            }
+            catch (Exception ex)
+            {
+                code = 500;
+                response = new ErrorResponse(ex.Message);
+                base.Logger.LogError(ex.ToString());
+
+            }
+
+            return StatusCode(code, response);
+        }
+
+
+        [HttpPost]
+        public ActionResult<ItemResponse<int>> Create(NextechAddRequest model)
+        {
+            ObjectResult result = null;
+
+            IUserAuthData user = _authService.GetCurrentUser();
+
+            try
+            {
+
+                int userId = _authService.GetCurrentUserId();
+                int id = _service.Add(model, user.Id);
+                ItemResponse<int> response = new ItemResponse<int>() { Item = id };
+
+                result = Created201(response);
+
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.ToString());
+                ErrorResponse response = new ErrorResponse(ex.Message);
+
+                result = StatusCode(500, response);
+
+            }
+
+            return result;
+
+        }
+
+        [HttpPut("{id:int}")]
+        public ActionResult<ItemResponse<int>> Update(NextechUpdateRequest model)
+        {
+            int code = 200;
+            BaseResponse response = null;
+
+            try
+            {
+                _service.Update(model);
+
+                response = new SuccessResponse();
+
+            }
+            catch (Exception ex)
+            {
+                code = 500;
+                response = new ErrorResponse(ex.Message);
+            }
+
+
+            return StatusCode(code, response);
+        }
+
+        [HttpGet("paginate")]
+        public ActionResult<ItemResponse<Paged<Nextech>>> Pagination(int pageIndex, int pageSize)
+        {
+            int code = 200;
+            BaseResponse response = null;
+
+            try
+            {
+                Paged<Nextech> page = _service.Pagination(pageIndex, pageSize);
+
+                if (page == null)
+                {
+                    code = 404;
+                    response = new ErrorResponse("App Resource not found.");
+                }
+                else
+                {
+                    response = new ItemResponse<Paged<Nextech>> { Item = page };
+                }
+            }
+            catch (Exception ex)
+            {
+                code = 500;
+                response = new ErrorResponse(ex.Message);
+                base.Logger.LogError(ex.ToString());
+            }
+
+
+            return StatusCode(code, response);
+
+        }
+
+    }
+}

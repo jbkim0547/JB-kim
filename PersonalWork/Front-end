@@ -1,0 +1,135 @@
+import React from "react";
+import {
+  Form,
+  FormGroup,
+  Label,
+  Button,
+  Container,
+  Row,
+  Col,
+} from "reactstrap";
+import { Formik, Field } from "formik";
+import * as Yup from "yup";
+import { withRouter } from "react-router-dom";
+
+class InterviewCompany extends React.Component {
+  state = {
+    formData: {
+      companyName: "",
+      date: "",
+      description: "",
+    },
+  };
+
+  handleSubmit = (values, { resetForm }) => {
+    console.log("submit");
+    resetForm(this.state.formData);
+  };
+
+  render() {
+    return (
+      <React.Fragment>
+        <Formik
+          enableReinitialize={true}
+          validationSchema={Yup.object().shape({
+            companyName: Yup.string().required("Required"),
+            date: Yup.string().required("Required"),
+            description: Yup.string().required("Required"),
+          })}
+          initialValues={this.state.formData}
+          onSubmit={this.handleSubmit}
+        >
+          {(props) => {
+            const {
+              values,
+              touched,
+              errors,
+              handleSubmit,
+              isValid,
+              isSubmitting,
+            } = props;
+            return (
+              <Container>
+                <Row>
+                  <Col>
+                    <Form
+                      id="companyInfo"
+                      onSubmit={handleSubmit}
+                      className={"col-md-6 pt-4"}
+                    >
+                      <FormGroup>
+                        <Label>Company Name</Label>
+                        <Field
+                          name="companyName"
+                          type="text"
+                          values={values.companyName}
+                          placeholder="Company Name"
+                          autoComplete="off"
+                          className={
+                            errors.companyName && touched.companyName
+                              ? "form-control error"
+                              : "form-control"
+                          }
+                        />
+                        {errors.companyName && touched.companyName && (
+                          <span className="input-feedback text-danger">
+                            {errors.companyName}
+                          </span>
+                        )}
+                      </FormGroup>
+                      <FormGroup>
+                        <Label>Date</Label>
+                        <Field
+                          name="date"
+                          type="text"
+                          values={values.date}
+                          placeholder="Date"
+                          autoComplete="off"
+                          className={
+                            errors.date && touched.date
+                              ? "form-control error"
+                              : "form-control"
+                          }
+                        />
+                        {errors.date && touched.date && (
+                          <span className="input-feedback text-danger">
+                            {errors.date}
+                          </span>
+                        )}
+                      </FormGroup>
+                      <FormGroup>
+                        <Label>Description</Label>
+                        <Field
+                          name="description"
+                          type="text"
+                          values={values.description}
+                          placeholder="Description"
+                          autoComplete="off"
+                          className={
+                            errors.description && touched.description
+                              ? "form-control error"
+                              : "form-control"
+                          }
+                        />
+                        {errors.description && touched.description && (
+                          <span className="input-feedback text-danger">
+                            {errors.description}
+                          </span>
+                        )}
+                      </FormGroup>
+
+                      <Button type="submit" disabled={!isValid || isSubmitting}>
+                        Submit
+                      </Button>
+                    </Form>
+                  </Col>
+                </Row>
+              </Container>
+            );
+          }}
+        </Formik>
+      </React.Fragment>
+    );
+  }
+}
+export default withRouter(InterviewCompany);

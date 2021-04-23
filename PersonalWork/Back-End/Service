@@ -91,7 +91,7 @@ namespace Sabio.Services
                     list.Add(ainterviewCompany);
                 });
 
-            return 9;
+            return list;
         }
 
         private static InterviewCompany MapInterviewCompany(IDataReader reader)

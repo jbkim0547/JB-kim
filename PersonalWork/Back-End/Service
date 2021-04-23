@@ -41,7 +41,7 @@ namespace Sabio.Services
         {
 
             List<InterviewCompany> list = null;
-            string procName = "[dbo].[InterviewedCompany_SelectTopten]";
+            string procName = "[dbo].[InterviewedCompany_SelectTopTen]";
 
 
             _data.ExecuteCmd(procName, inputParamMapper: null,

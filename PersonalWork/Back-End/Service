@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using Sabio.Data;
+using Sabio.Models.Requests.InterviewCompany;
 
 namespace Sabio.Services
 {
@@ -16,6 +17,38 @@ namespace Sabio.Services
         {
             _data = data;
         }
+        public int Add(InterviewAddRequest model)
+        {
+            int id = 0;
+
+            string procName = "[dbo].[InterviewedCompany_Insert]";
+
+            _data.ExecuteNonQuery(procName, inputParamMapper: delegate (SqlParameterCollection col)
+            {
+                col.AddWithValue("@CompanyName", model.CompanyName);
+                col.AddWithValue("@Date", model.Date);
+                col.AddWithValue("@Description", model.Description);
+
+
+                SqlParameter idOut = new SqlParameter("@Id", SqlDbType.Int);
+                idOut.Direction = ParameterDirection.Output;
+
+                col.Add(idOut);
+
+
+            }, 
+            returnParameters: delegate (SqlParameterCollection returnCollection)
+            {
+                object oId = returnCollection["@Id"].Value;
+
+                Int32.TryParse(oId.ToString(), out id);
+
+                Console.WriteLine("");
+
+            });
+
+            return id;
+        }
 
         public InterviewCompany Get(int id)
         {
@@ -23,7 +56,8 @@ namespace Sabio.Services
             string procName = "[dbo].[InterviewedCompany_SelectById]";
             InterviewCompany interviewCompany = null;
 
-            _data.ExecuteCmd(procName, delegate (SqlParameterCollection paramCollection) {
+            _data.ExecuteCmd(procName, delegate (SqlParameterCollection paramCollection)
+            {
 
 
                 paramCollection.AddWithValue("@Id", id);
@@ -57,7 +91,7 @@ namespace Sabio.Services
                     list.Add(ainterviewCompany);
                 });
 
-            return list;
+            return 9;
         }
 
         private static InterviewCompany MapInterviewCompany(IDataReader reader)
@@ -74,4 +108,3 @@ namespace Sabio.Services
         }
     }
 }
-

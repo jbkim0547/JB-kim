@@ -30,18 +30,48 @@ namespace Sabio.Services
 
             }, delegate (IDataReader reader, short set)
             {
-                interviewCompany = new InterviewCompany();
-
-                int startingIndex = 0;
-
-                interviewCompany.Id = reader.GetSafeInt32(startingIndex++);
-                interviewCompany.CompanyName = reader.GetSafeString(startingIndex++);
-                interviewCompany.Date = reader.GetSafeString(startingIndex++);
-                interviewCompany.Description = reader.GetSafeString(startingIndex++);
+                interviewCompany = MapInterviewCompany(reader);
             }
             );
 
             return interviewCompany;
         }
+
+        public List<InterviewCompany> GetTop()
+        {
+
+            List<InterviewCompany> list = null;
+            string procName = "[dbo].[InterviewedCompany_SelectTopten]";
+
+
+            _data.ExecuteCmd(procName, inputParamMapper: null,
+                singleRecordMapper: delegate (IDataReader reader, short set)
+                {
+                    InterviewCompany ainterviewCompany = MapInterviewCompany(reader);
+
+                    if (list == null)
+                    {
+                        list = new List<InterviewCompany>();
+                    }
+
+                    list.Add(ainterviewCompany);
+                });
+
+            return list;
+        }
+
+        private static InterviewCompany MapInterviewCompany(IDataReader reader)
+        {
+            InterviewCompany ainterviewCompany = new InterviewCompany();
+
+            int startingIndex = 0;
+
+            ainterviewCompany.Id = reader.GetSafeInt32(startingIndex++);
+            ainterviewCompany.CompanyName = reader.GetSafeString(startingIndex++);
+            ainterviewCompany.Date = reader.GetSafeString(startingIndex++);
+            ainterviewCompany.Description = reader.GetSafeString(startingIndex++);
+            return ainterviewCompany;
+        }
     }
 }
+

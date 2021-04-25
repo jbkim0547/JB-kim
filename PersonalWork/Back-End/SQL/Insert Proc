@@ -1,0 +1,49 @@
+ALTER proc [dbo].[InterviewedCompany_Insert]
+
+@CompanyName nvarchar(50)
+,@Date nvarchar(50)
+,@Description nvarchar (300)
+,@Id int OUTPUT
+
+as 
+
+
+
+/* -----Test Code-----
+
+Declare
+@Id int = 0
+
+Declare 
+@CompanyName nvarchar(50) = 'Pathrise'
+,@Date nvarchar(50) = '3/15/21'
+,@Description nvarchar(300) = 'Could not even start the interview
+				 After - Made script for previous experience'
+
+Execute [dbo].[InterviewedCompany_Insert]
+
+@CompanyName
+,@Date
+,@Description
+,@Id OUTPUT
+
+Select *
+From [dbo].[InterviewedCompany]
+Where Id = @Id
+
+
+*/
+BEGIN
+
+	 INSERT INTO [dbo].[InterviewedCompany]
+			   ([CompanyName]
+			   ,[Date]
+			   ,[Description])
+     VALUES
+           (@CompanyName
+			,@Date
+			,@Description)
+
+	 SET @Id = SCOPE_IDENTITY()
+
+End

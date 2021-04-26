@@ -1,0 +1,49 @@
+ALTER Proc [dbo].[InterviewedCompany_Update]
+
+@CompanyName nvarchar(50)
+,@Date nvarchar(50)
+,@Description nvarchar (300)
+,@Id int OUTPUT
+
+as 
+
+/* -----Test Code-----
+
+Declare
+@Id int = 2
+
+Declare 
+@CompanyName nvarchar(50) = 'Pathrise'
+,@Date nvarchar(50) = '3/15/21'
+,@Description nvarchar(300) = 'Could not even start the interview
+				 After - Made script for previous experience'
+
+Select *
+From [dbo].[InterviewedCompany]
+Where Id = 2
+
+Execute [dbo].[InterviewedCompany_Update]
+
+@CompanyName
+,@Date
+,@Description
+,@Id OUTPUT
+
+Select *
+From [dbo].[InterviewedCompany]
+Where Id = 2
+
+*/
+
+
+BEGIN
+
+UPDATE [dbo].[InterviewedCompany]
+   SET [CompanyName] = @CompanyName
+      ,[Date] = @Date
+      ,[Description] = @Description
+ WHERE Id = @Id
+
+End
+
+

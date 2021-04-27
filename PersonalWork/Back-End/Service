@@ -25,9 +25,7 @@ namespace Sabio.Services
 
             _data.ExecuteNonQuery(procName, inputParamMapper: delegate (SqlParameterCollection col)
             {
-                col.AddWithValue("@CompanyName", model.CompanyName);
-                col.AddWithValue("@Date", model.Date);
-                col.AddWithValue("@Description", model.Description);
+                AddCommonParams(model, col);
                 col.AddWithValue("@Id", model.Id);
 
             },
@@ -43,10 +41,7 @@ namespace Sabio.Services
 
             _data.ExecuteNonQuery(procName, inputParamMapper: delegate (SqlParameterCollection col)
             {
-                col.AddWithValue("@CompanyName", model.CompanyName);
-                col.AddWithValue("@Date", model.Date);
-                col.AddWithValue("@Description", model.Description);
-
+                AddCommonParams(model, col);
 
                 SqlParameter idOut = new SqlParameter("@Id", SqlDbType.Int);
                 idOut.Direction = ParameterDirection.Output;
@@ -54,12 +49,12 @@ namespace Sabio.Services
                 col.Add(idOut);
 
 
-            }, 
+            },
             returnParameters: delegate (SqlParameterCollection returnCollection)
             {
                 object oId = returnCollection["@Id"].Value;
 
-                Int32.TryParse(oId.ToString(), out id);
+                int.TryParse(oId.ToString(), out id);
 
                 Console.WriteLine("");
 
@@ -123,6 +118,13 @@ namespace Sabio.Services
             ainterviewCompany.Date = reader.GetSafeString(startingIndex++);
             ainterviewCompany.Description = reader.GetSafeString(startingIndex++);
             return ainterviewCompany;
+        }
+
+        private static void AddCommonParams(InterviewAddRequest model, SqlParameterCollection col)
+        {
+            col.AddWithValue("@CompanyName", model.CompanyName);
+            col.AddWithValue("@Date", model.Date);
+            col.AddWithValue("@Description", model.Description);
         }
     }
 }

@@ -17,6 +17,24 @@ namespace Sabio.Services
         {
             _data = data;
         }
+
+        public void Update(InterviewUpdateRequest model)
+        {
+
+            string procName = "[dbo].[InterviewedCompany_Update]";
+
+            _data.ExecuteNonQuery(procName, inputParamMapper: delegate (SqlParameterCollection col)
+            {
+                col.AddWithValue("@CompanyName", model.CompanyName);
+                col.AddWithValue("@Date", model.Date);
+                col.AddWithValue("@Description", model.Description);
+                col.AddWithValue("@Id", model.Id);
+
+            },
+            returnParameters: null);
+
+        }
+
         public int Add(InterviewAddRequest model)
         {
             int id = 0;

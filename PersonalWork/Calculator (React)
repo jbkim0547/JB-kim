@@ -1,0 +1,38 @@
+import "./styles.css";
+import React, { useState } from "react";
+
+export default function App() {
+  const [value1, setValue1] = useState(0);
+  const [value2, setValue2] = useState(0);
+  const [total, setTotal] = useState(value1 + value2);
+
+  function addValues() {
+    setTotal(value1 + value2);
+  }
+
+  return (
+    <div className="Calculator">
+      <h1>Calculator</h1>
+
+      <div className="input-class">
+        <input
+          type="number"
+          value={value1}
+          onChange={(e) => setValue1(+e.target.value)}
+          placeholder="0"
+        ></input>
+
+        <input
+          type="number"
+          value={value2}
+          onChange={(e) => setValue2(+e.target.value)}
+          placeholder="0"
+        ></input>
+      </div>
+
+      <button onClick={addValues}>Add</button>
+
+      <h2>Total {total}</h2>
+    </div>
+  );
+}

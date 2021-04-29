@@ -1,0 +1,29 @@
+ALTER proc [dbo].[InterviewedCompany_Delete]
+@id int
+
+as
+
+/* ----- Test Code -----
+
+Declare 
+@id int = 3 
+
+Select*
+From [dbo].[InterviewedCompany]
+Where id = @id
+
+Execute [dbo].[InterviewedCompany_Delete]
+@id
+
+Select*
+From [dbo].[InterviewedCompany]
+Where id = @id
+
+*/
+
+BEGIN
+
+DELETE FROM [dbo].[InterviewedCompany]
+      WHERE id = @id
+
+END

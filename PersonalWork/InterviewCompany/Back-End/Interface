@@ -1,0 +1,14 @@
+using Sabio.Models.Domain;
+using Sabio.Models.Requests.InterviewCompany;
+using System.Collections.Generic;
+
+namespace Sabio.Services
+{
+    public interface IInterviewCompanyService
+    {
+        int Add(InterviewAddRequest model);
+        InterviewCompany Get(int id);
+        List<InterviewCompany> GetTop();
+        void Update(InterviewUpdateRequest model);
+    }
+}

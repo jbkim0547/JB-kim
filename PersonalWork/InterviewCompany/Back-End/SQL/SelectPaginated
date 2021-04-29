@@ -1,0 +1,34 @@
+Alter proc [dbo].[InterviewedCompany_Paginated]
+@pageIndex int
+,@pageSize int
+
+as
+
+/* -----Test Code-----
+
+Declare @pageIndex int =0
+,@PageSize int = 3
+
+Execute [dbo].[InterviewedCompany_Paginated]
+@pageIndex 
+,@pageSize 
+
+Select *
+From dbo.InterviewedCompany
+
+
+*/
+
+BEGIN
+
+	Declare @offSet int = @pageIndex * @PageSize
+
+	Select*
+		,TotalCount = COUNT(1) OVER()
+	From dbo.InterviewedCompany
+	Order by Id
+
+	OFFSET @offSet Row
+	Fetch Next @PageSize Row ONLY	
+
+END

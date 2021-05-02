@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Sabio.Models.Domain;
 using Sabio.Services;
+using Sabio.Web.Controllers;
+using Sabio.Web.Models.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +14,24 @@ namespace Sabio.Web.Api.Controllers
 {
     [Route("api/interviewCompanies")]
     [ApiController]
-    public class InterviewCompanyAPIController : ControllerBase
+    public class InterviewCompanyAPIController : BaseApiController
     {
         private IInterviewCompanyService _service = null;
-        public InterviewCompanyAPIController(IInterviewCompanyService service)
+        public InterviewCompanyAPIController(IInterviewCompanyService service, ILogger<InterviewCompanyAPIController> logger) : base(logger)
         {
             _service = service;
 
+        }
+
+        [HttpGet("")]
+        public ActionResult<ItemsResponse<InterviewCompany>> GetAll()
+        {
+            List<InterviewCompany> list = _service.GetTop();
+
+            ItemsResponse<InterviewCompany> response = new ItemsResponse<InterviewCompany>();
+            response.Items = list;
+
+            return response;
         }
     }
 }

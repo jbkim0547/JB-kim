@@ -23,7 +23,7 @@ namespace Sabio.Web.Api.Controllers
 
         }
 
-        [HttpGet("")]
+        [HttpGet]
         public ActionResult<ItemsResponse<InterviewCompany>> GetAll()
         {
             List<InterviewCompany> list = _service.GetTop();
@@ -31,7 +31,16 @@ namespace Sabio.Web.Api.Controllers
             ItemsResponse<InterviewCompany> response = new ItemsResponse<InterviewCompany>();
             response.Items = list;
 
-            return Ok(response);
+            if (list == null)
+            {
+                return NotFound404(response);
+            }
+            else
+            {
+                return Ok(response);
+            }
+
+
         }
 
         [HttpGet("{id:int}")]
@@ -43,8 +52,15 @@ namespace Sabio.Web.Api.Controllers
             ItemResponse<InterviewCompany> response = new ItemResponse<InterviewCompany>();
             response.Item = i;
 
-            return Ok(response);
+            if (response.Item == null)
+            {
+                return NotFound404(response);
+            }
+            else
+            {
+                return Ok(response);
+            }
+
         }
     }
 }
-

@@ -31,7 +31,8 @@ namespace Sabio.Web.Api.Controllers
             ItemsResponse<InterviewCompany> response = new ItemsResponse<InterviewCompany>();
             response.Items = list;
 
-            return response;
+            return Ok(response);
         }
     }
 }
+

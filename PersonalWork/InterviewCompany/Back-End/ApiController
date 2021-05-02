@@ -33,6 +33,18 @@ namespace Sabio.Web.Api.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet("{id:int}")]
+        public ActionResult<ItemResponse<InterviewCompany>> Get(int id)
+        {
+
+            InterviewCompany i = _service.Get(id);
+
+            ItemResponse<InterviewCompany> response = new ItemResponse<InterviewCompany>();
+            response.Item = i;
+
+            return Ok(response);
+        }
     }
 }
 

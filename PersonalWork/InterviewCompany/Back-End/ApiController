@@ -62,5 +62,17 @@ namespace Sabio.Web.Api.Controllers
             }
 
         }
+
+        [HttpDelete("{id:int}")]
+        public ActionResult<SuccessResponse> Delete(int id)
+        {
+            _service.Delete(id);
+
+            SuccessResponse response = new SuccessResponse();
+
+
+            return Ok(response);
+        }
     }
 }
+

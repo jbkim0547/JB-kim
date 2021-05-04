@@ -107,14 +107,14 @@ namespace Sabio.Services
             return list;
         }
 
-        public void Delete(int Id)
+        public void Delete(int id)
         {
             string procName = "[dbo].[InterviewedCompany_Delete]";
 
             _data.ExecuteNonQuery(procName,
                 inputParamMapper: delegate (SqlParameterCollection collection)
                 {
-                    collection.AddWithValue("@Id", Id);
+                    collection.AddWithValue("@Id", id);
                 },
                 returnParameters: null
                 );

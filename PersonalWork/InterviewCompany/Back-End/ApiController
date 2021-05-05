@@ -86,8 +86,7 @@ namespace Sabio.Web.Api.Controllers
 
             response.Item = id;
 
-            return null;
+            return Ok(response);
         }
     }
 }
-

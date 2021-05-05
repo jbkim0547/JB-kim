@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Sabio.Models.Domain;
+using Sabio.Models.Requests.InterviewCompany;
 using Sabio.Services;
 using Sabio.Web.Controllers;
 using Sabio.Web.Models.Responses;
@@ -72,6 +73,20 @@ namespace Sabio.Web.Api.Controllers
 
 
             return Ok(response);
+        }
+
+        [HttpPost]
+        public ActionResult<ItemResponse<int>> Create(InterviewAddRequest model)
+        {
+
+            int id = _service.Add(model);
+
+
+            ItemResponse<int> response = new ItemResponse<int>();
+
+            response.Item = id;
+
+            return null;
         }
     }
 }

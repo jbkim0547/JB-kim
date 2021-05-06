@@ -88,5 +88,17 @@ namespace Sabio.Web.Api.Controllers
 
             return Ok(response);
         }
+
+        [HttpPut("{id:int}")]
+        public ActionResult<ItemResponse<int>> Update(InterviewUpdateRequest model)
+        {
+
+            _service.Update(model);
+
+            SuccessResponse response = new SuccessResponse();
+
+            return Ok(response);
+        }
+
     }
 }

@@ -1,0 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Sabio.Models.Requests.InterviewCompany
+{
+    public class InterviewUpdateRequest : InterviewAddRequest
+    {
+        public int Id { get; set; }
+    }
+}

@@ -1,13 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Sabio.Models.Requests.InterviewCompany
 {
     public class InterviewAddRequest
     {
+        [Required]
         public string CompanyName { get; set; }
+        [Required]
         public string Date { get; set; }
+        [Required]
         public string Description { get; set; }
 
     }

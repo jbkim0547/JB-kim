@@ -7,6 +7,7 @@ namespace Sabio.Models.Requests.InterviewCompany
 {
     public class InterviewUpdateRequest : InterviewAddRequest, IModelIdentifier
     {
+        [Required]
         public int Id { get; set; }
     }
 }

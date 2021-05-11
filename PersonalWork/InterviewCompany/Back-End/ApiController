@@ -8,6 +8,7 @@ using Sabio.Web.Controllers;
 using Sabio.Web.Models.Responses;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -47,21 +48,36 @@ namespace Sabio.Web.Api.Controllers
         [HttpGet("{id:int}")]
         public ActionResult<ItemResponse<InterviewCompany>> Get(int id)
         {
-
-            InterviewCompany i = _service.Get(id);
-
-            ItemResponse<InterviewCompany> response = new ItemResponse<InterviewCompany>();
-            response.Item = i;
-
-            if (response.Item == null)
+            try
             {
-                return NotFound404(response);
+                InterviewCompany i = _service.Get(id);
+
+                ItemResponse<InterviewCompany> response = new ItemResponse<InterviewCompany>();
+                response.Item = i;
+
+                if (response.Item == null)
+                {
+                    return NotFound404(response);
+                }
+                else
+                {
+                    return Ok(response);
+                }
             }
-            else
+            catch (SqlException argEx)
             {
-                return Ok(response);
+                return base.StatusCode(500, new ErrorResponse($"SqlException Error: ${argEx.Message}"));
+            }
+            catch (ArgumentException argEx)
+            {
+                return base.StatusCode(500, new ErrorResponse($"ArgumentException Error: ${argEx.Message}"));
             }
 
+            catch (Exception ex)
+            {
+                base.Logger.LogError(ex.ToString());
+                return base.StatusCode(500, new ErrorResponse($"Generic Error: ${ex.Message}"));
+            }
         }
 
         [HttpDelete("{id:int}")]
@@ -102,3 +118,4 @@ namespace Sabio.Web.Api.Controllers
 
     }
 }
+

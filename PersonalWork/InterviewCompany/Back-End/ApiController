@@ -66,17 +66,17 @@ namespace Sabio.Web.Api.Controllers
             }
             catch (SqlException argEx)
             {
-                return base.StatusCode(500, new ErrorResponse($"SqlException Error: ${argEx.Message}"));
+                return base.StatusCode(500, new ErrorResponse($"SqlException Error: {argEx.Message}"));
             }
             catch (ArgumentException argEx)
             {
-                return base.StatusCode(500, new ErrorResponse($"ArgumentException Error: ${argEx.Message}"));
+                return base.StatusCode(500, new ErrorResponse($"ArgumentException Error: {argEx.Message}"));
             }
 
             catch (Exception ex)
             {
                 base.Logger.LogError(ex.ToString());
-                return base.StatusCode(500, new ErrorResponse($"Generic Error: ${ex.Message}"));
+                return base.StatusCode(500, new ErrorResponse($"Generic Error: {ex.Message}"));
             }
         }
 

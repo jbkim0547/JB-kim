@@ -48,36 +48,49 @@ namespace Sabio.Web.Api.Controllers
         [HttpGet("{id:int}")]
         public ActionResult<ItemResponse<InterviewCompany>> Get(int id)
         {
+
+            int iCode = 200;
+            BaseResponse response = null;
+
             try
             {
-                InterviewCompany i = _service.Get(id);
+                InterviewCompany interview = _service.Get(id);
 
-                ItemResponse<InterviewCompany> response = new ItemResponse<InterviewCompany>();
-                response.Item = i;
+                //ItemResponse<InterviewCompany> response = new ItemResponse<InterviewCompany>();
+                //response.Item = i;
 
-                if (response.Item == null)
+                if (interview == null)
                 {
-                    return NotFound404(response);
+                    iCode = 404;
+                    response = new ErrorResponse("Application Resource not found");
+                
                 }
                 else
                 {
-                    return Ok(response);
+                    response = new ItemResponse<InterviewCompany>() { Item = interview };
                 }
             }
-            catch (SqlException argEx)
+            catch (SqlException sqlEx)
             {
-                return base.StatusCode(500, new ErrorResponse($"SqlException Error: {argEx.Message}"));
+                iCode = 500;
+                response = new ErrorResponse($"SqlException Error: { sqlEx.Message}");
             }
             catch (ArgumentException argEx)
             {
-                return base.StatusCode(500, new ErrorResponse($"ArgumentException Error: {argEx.Message}"));
+                iCode = 500;
+                response = new ErrorResponse($"ArgumentException Error: { argEx.Message}");
             }
 
             catch (Exception ex)
             {
+                iCode = 500;
                 base.Logger.LogError(ex.ToString());
-                return base.StatusCode(500, new ErrorResponse($"Generic Error: {ex.Message}"));
+                response = new ErrorResponse($"Generic Error: { ex.Message}");
+                
             }
+
+
+            return StatusCode(iCode, response);
         }
 
         [HttpDelete("{id:int}")]
@@ -96,7 +109,6 @@ namespace Sabio.Web.Api.Controllers
         {
 
             int id = _service.Add(model);
-
 
             ItemResponse<int> response = new ItemResponse<int>();
 
@@ -118,4 +130,3 @@ namespace Sabio.Web.Api.Controllers
 
     }
 }
-

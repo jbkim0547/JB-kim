@@ -56,9 +56,6 @@ namespace Sabio.Web.Api.Controllers
             {
                 InterviewCompany interview = _service.Get(id);
 
-                //ItemResponse<InterviewCompany> response = new ItemResponse<InterviewCompany>();
-                //response.Item = i;
-
                 if (interview == null)
                 {
                     iCode = 404;

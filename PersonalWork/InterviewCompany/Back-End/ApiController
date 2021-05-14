@@ -28,19 +28,31 @@ namespace Sabio.Web.Api.Controllers
         [HttpGet]
         public ActionResult<ItemsResponse<InterviewCompany>> GetAll()
         {
-            List<InterviewCompany> list = _service.GetTop();
+            int code = 200;
+            BaseResponse response = null;
 
-            ItemsResponse<InterviewCompany> response = new ItemsResponse<InterviewCompany>();
-            response.Items = list;
+            try
+            {
+                List<InterviewCompany> list = _service.GetTop();
 
-            if (list == null)
-            {
-                return NotFound404(response);
+                if (list == null)
+                {
+                    code = 404;
+                    response = new ErrorResponse("App Resource not found.");
+                }
+                else
+                {
+                    response = new ItemsResponse<InterviewCompany> { Items = list };
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return Ok(response);
+                code = 500;
+                response = new ErrorResponse(ex.Message);
+                
             }
+
+            return StatusCode(code, response);
 
         }
 

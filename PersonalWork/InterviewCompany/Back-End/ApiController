@@ -42,7 +42,6 @@ namespace Sabio.Web.Api.Controllers
                 return Ok(response);
             }
 
-
         }
 
         [HttpGet("{id:int}")]
@@ -127,3 +126,4 @@ namespace Sabio.Web.Api.Controllers
 
     }
 }
+

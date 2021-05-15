@@ -49,7 +49,7 @@ namespace Sabio.Web.Api.Controllers
             {
                 code = 500;
                 response = new ErrorResponse(ex.Message);
-                
+
             }
 
             return StatusCode(code, response);
@@ -71,7 +71,7 @@ namespace Sabio.Web.Api.Controllers
                 {
                     iCode = 404;
                     response = new ErrorResponse("Application Resource not found");
-                
+
                 }
                 else
                 {
@@ -94,7 +94,7 @@ namespace Sabio.Web.Api.Controllers
                 iCode = 500;
                 base.Logger.LogError(ex.ToString());
                 response = new ErrorResponse($"Generic Error: { ex.Message}");
-                
+
             }
 
 
@@ -104,12 +104,24 @@ namespace Sabio.Web.Api.Controllers
         [HttpDelete("{id:int}")]
         public ActionResult<SuccessResponse> Delete(int id)
         {
-            _service.Delete(id);
+            int code = 200;
+            BaseResponse response = null;
 
-            SuccessResponse response = new SuccessResponse();
+            try
+            {
+                _service.Delete(id);
+
+                response = new SuccessResponse();
+            }
+            catch (Exception ex)
+            {
+                code = 500;
+                response = new ErrorResponse(ex.Message);
+                
+            }
 
 
-            return Ok(response);
+            return StatusCode(code, response);
         }
 
         [HttpPost]
@@ -138,4 +150,3 @@ namespace Sabio.Web.Api.Controllers
 
     }
 }
-

@@ -33,7 +33,7 @@ namespace Sabio.Services
 
         }
 
-        public int Add(InterviewAddRequest model)
+        public int Add(InterviewAddRequest model, int userId)
         {
             int id = 0;
 
@@ -69,9 +69,13 @@ namespace Sabio.Services
             string procName = "[dbo].[InterviewedCompany_SelectById]";
             InterviewCompany interviewCompany = null;
 
+            if(id > 1000)
+            {
+                throw new ArgumentException("This is a simulated Error");
+            }
+
             _data.ExecuteCmd(procName, delegate (SqlParameterCollection paramCollection)
             {
-
 
                 paramCollection.AddWithValue("@Id", id);
 
@@ -128,8 +132,9 @@ namespace Sabio.Services
 
             ainterviewCompany.Id = reader.GetSafeInt32(startingIndex++);
             ainterviewCompany.CompanyName = reader.GetSafeString(startingIndex++);
-            ainterviewCompany.Date = reader.GetSafeString(startingIndex++);
+            ainterviewCompany.Date = reader.GetSafeDateTime(startingIndex++);
             ainterviewCompany.Description = reader.GetSafeString(startingIndex++);
+
             return ainterviewCompany;
         }
 
@@ -141,3 +146,4 @@ namespace Sabio.Services
         }
     }
 }
+

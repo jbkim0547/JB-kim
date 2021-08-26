@@ -100,4 +100,4 @@ const remove = (id) => {
     return axios(config);
 };
 
-export default { getAllByProviderId, getById, add, edit, remove, getLast30DaysByProviderId, addEmail }
+export default {getAllByProviderId, getById, add, edit, remove, getLast30DaysByProviderId, addEmail}

@@ -1,0 +1,113 @@
+import useInput from "../hooks/use-input";
+
+const isNotEmpty = (value) => value.trim() !== "";
+const isEmail = (value) => value.includes("@")
+
+const BasicForm = (props) => {
+  const {
+    value: enteredFirstName,
+    isValid: enteredFirstNameIsValid,
+    hasError: firstNameInputHasError,
+    valueChangeHandler: FirstNameChangedHandler,
+    inputBlurHandler: firstNameBlurHandler,
+    reset: resetFirstNameInput,
+  } = useInput(isNotEmpty);
+  
+  const {
+    value: enteredLastName,
+    isValid: enteredLastNameIsValid,
+    hasError: lastNameInputHasError,
+    valueChangeHandler: lastNameChangedHandler,
+    inputBlurHandler: lastNameBlurHandler,
+    reset: resetLastNameInput,
+  } = useInput(isNotEmpty);
+  
+  const {
+    value: enteredEmail,
+    isValid: enteredEmailIsValid,
+    hasError: emailInputHasError,
+    valueChangeHandler: emailChangedHandler,
+    inputBlurHandler: nameBlurHandler,
+    reset: resetEmailInput,
+  } = useInput(isEmail);
+
+  const firstNameInputClasses = firstNameInputHasError
+  ? "form-control invalid"
+  : "form-control";
+  const lastNameInputClasses = lastNameInputHasError
+  ? "form-control invalid"
+  : "form-control";
+  const emailInputClasses = emailInputHasError
+  ? "form-control invalid"
+  : "form-control";
+
+  let formIsValid = false;
+
+  if (enteredFirstNameIsValid && enteredLastNameIsValid && enteredEmailIsValid) {
+    formIsValid = true;
+  }
+
+  const formSubmissionHandler = (event) => {
+    event.preventDefault();
+
+    if (!formIsValid) {
+      return;
+    }
+
+    //nameInputRef.current.value = ''; => Noit Ideal, don't manipulate the dom
+    resetFirstNameInput();
+    resetLastNameInput();
+    resetEmailInput();
+    
+    console.log ('Submitted');
+    console.log (enteredFirstName, enteredLastName, enteredEmail)
+  };
+  return (
+    <form onSubmit ={formSubmissionHandler}>
+        <div className={firstNameInputClasses}>
+          <label htmlFor="name">First Name</label>
+          <input
+            type="text"
+            id="firstName"
+            onChange={FirstNameChangedHandler}
+            onBlur={firstNameBlurHandler}
+            value={enteredFirstName}
+          />
+          {firstNameInputHasError && (
+          <p className="error-text">Fisrt Name must not be empty.</p>
+        )}
+        </div>
+        <div className={lastNameInputClasses}>
+          <label htmlFor="name">Last Name</label>
+          <input
+            type="text"
+            id="lastName"
+            onChange={lastNameChangedHandler}
+            onBlur={lastNameBlurHandler}
+            value={enteredLastName}
+          />
+          {lastNameInputHasError && (
+          <p className="error-text">Last Name must not be empty.</p>
+        )}
+        </div>
+      <div className={emailInputClasses}>
+        <label htmlFor="name">E-Mail Address</label>
+        <input
+            type="text"
+            id="emailName"
+            onChange={emailChangedHandler}
+            onBlur={nameBlurHandler}
+            value={enteredEmail}
+          />
+          {emailInputHasError && (
+          <p className="error-text">E-mail must not be empty.</p>
+        )}
+      </div>
+      <div className="form-actions">
+        <button disabled={!formIsValid}>Submit</button>
+      </div>
+    </form>
+  );
+};
+
+export default BasicForm;

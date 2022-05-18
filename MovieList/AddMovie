@@ -36,7 +36,7 @@ function AddMovie(props) {
         <input type='text' id='date' ref={releaseDateRef} />
       </div>
       <button>Add Movie</button>
-    </form
+    </form>
   );
 }
 

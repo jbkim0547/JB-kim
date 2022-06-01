@@ -1,4 +1,4 @@
-import {useRouter} from 'next/router'
+import {useRouter} from 'next/route'
 
 import Card from '../ui/Card';
 import classes from './MeetupItem.module.css';

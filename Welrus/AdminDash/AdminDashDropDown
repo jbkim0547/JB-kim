@@ -119,4 +119,4 @@ class AdminDashDropDown extends Component {
 AdminDashDropDown.propTypes = {
   passToMapper: PropTypes.func,
 };
-export default AdminDashDropDown;
+export default AdminDashDropDown

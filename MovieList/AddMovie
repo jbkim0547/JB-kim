@@ -40,4 +40,4 @@ function AddMovie(props) {
   );
 }
 
-export default AddMovie;
+export default AddMovies;

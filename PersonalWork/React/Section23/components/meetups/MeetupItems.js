@@ -11,7 +11,7 @@ function MeetupItem(props) {
     router.push('/' + props.id);
   }
   
-   (
+   return (
     <li className={classes.item}>
       <Card>
         <div className={classes.image}>

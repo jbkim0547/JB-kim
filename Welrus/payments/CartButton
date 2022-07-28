@@ -6,7 +6,7 @@ import { withStyles } from "@material-ui/core/styles";
 import logger from "sabio-debug";
 import PropTypes from "prop-types";
 
-const _logger = logger.extend("CartIcon");
+ _logger = logger.extend("CartIcon");
 const StyledBadge = withStyles({
   badge: {
     backgroundColor: "var(--success)",

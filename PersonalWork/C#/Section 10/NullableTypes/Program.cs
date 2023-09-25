@@ -13,7 +13,7 @@ namespace NullableTypes
 
 
 
-            Console.WriteLine(date2);
+            Console.WriteLine(date20);
 
 
 

@@ -1,6 +1,6 @@
 using System;
 
-namespace NullableTypesss
+namespace NullableTypes
 {
     class Program
     {

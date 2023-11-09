@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace BulkyBookWeb.Controllers
 {
-    public class HomeController : Controllerrr
+    public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
 
